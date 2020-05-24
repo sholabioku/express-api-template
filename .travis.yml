@@ -14,25 +14,23 @@ cache:
 services:
   - postgresql
 addons:
-  postgresql: '12'
+  postgresql: '11'
   apt:
     packages:
-      - postgresql-12
-      - postgresql-client-12
+      - postgresql-11
+      - postgresql-client-11
 # before_install:
 #   - sudo cp /etc/postgresql/{11, 12}/main/pg_hba.conf
 #   - sudo /etc/init.d/postgresql restart
 
-dist: xenial
-group: edge
-
 before_install:
-  - sudo apt-get update
-  - sudo apt-get --yes remove postgresql\*
-  - sudo apt-get install -y postgresql-12 postgresql-client-12
-  - sudo sed -i 's/port = 5433/port = 5432/' /etc/postgresql/12/main/postgresql.conf
-  - sudo cp /etc/postgresql/12/main/pg_hba.conf
-  - sudo service postgresql restart 12
+  sudo apt-get update
+- sudo apt-get --yes remove postgresql\*
+- sudo apt-get install -y graphviz libxml2-dev libxmlsec1-dev libxmlsec1-openssl rabbitmq-server python3-enchant
+- sudo apt-get install -y postgresql-11 postgresql-client-11 postgresql-11-postgis-2.5
+- sudo sed -e 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf > postgresql.conf
+- sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+- sudo service postgresql restart 11
 
 install: npm install
 

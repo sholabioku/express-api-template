@@ -2,17 +2,17 @@ environment:
   matrix:
     - nodejs_version: '13'
 
-install:
-  - npm install
-
 before_test:
   - SET PGUSER=postgres
-  - SET PGPASSWORD=5346
+  - SET PGPASSWORD=Password12!
   - PATH=C:\Program Files\PostgreSQL\12\bin\;%PATH%
   - createdb testdb
 
 services:
   - postgresql101
+
+install:
+  - npm install
 
 test_script:
   - npm test

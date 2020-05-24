@@ -11,25 +11,22 @@ matrix:
 cache:
   directories: [node_modules]
 
-install: npm install
-
 services:
   - postgresql
-
 addons:
   postgresql: '12'
   apt:
     packages:
       - postgresql-12
       - postgresql-client-12
+before_install:
+  - sudo cp /etc/postgresql/{11, 12}/main/pg_hba.conf
+  - sudo /etc/init.d/postgresql restart
 
-# before_install:
-#   - sudo cp /etc/postgresql/12/main/pg_hba.conf
-#   -sudo /etc/init.d/postgresql restart
+install: npm install
 
 before_script:
   - psql -c 'create database testdb;' -U postgres
-  - psql -c "CREATE USER postgres WITH PASSWORD 5346;" -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build

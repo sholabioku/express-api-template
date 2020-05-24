@@ -1,19 +1,42 @@
 language: node_js
+
 env:
   global:
     - CC_TEST_REPORTER_ID=b3a7c8229dc8ac890e69e07637839f4deddc8c66a1652f4cb42dbd9c7955aaae
+
 matrix:
   include:
     - node_js: '13'
+
 cache:
   directories: [node_modules]
+
 install: npm install
-after_success: npm run coverage
+
+services:
+  - postgresql
+
+addons:
+  postgresql: '12'
+  apt:
+    packages:
+      - postgresql-12
+      - postgresql-client-12
+
+before_install:
+  - sudo cp /etc/postgresql/{9.6,10,12}/main/pg_hba.conf
+  - sudo /etc/init.d/postgresql restart
+
 before_script:
+  - psql -c 'create database testdb;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+
 script:
   - npm test
+
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESUL
+
+after_success: npm run coverage
